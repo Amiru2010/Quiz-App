@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .quiz-container {
+            text-align: center;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: inline-block;
+            text-align: left;
+        }
+        .option {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz Application</h1>
+        <div id="quiz-selector">
+            <label for="quiz-select">Select a Quiz:</label>
+            <select id="quiz-select">
+                <option value="quiz1">Quiz 1</option>
+                <option value="quiz2">Quiz 2</option>
+                <!-- Add more quizzes here -->
+            </select>
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+        <div class="quiz-container" id="quiz-container" style="display: none;">
+            <h2 id="question"></h2>
+            <div class="options" id="options"></div>
+            <button onclick="nextQuestion()">Next</button>
+        </div>
+        <div class="result" id="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const quizzes = {
+            quiz1: [
+                {
+                    question: "What is the capital of France?",
+                    options: ["Paris", "London", "Berlin", "Madrid"],
+                    answer: "Paris"
+                },
+                {
+                    question: "What is the largest mammal?",
+                    options: ["Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
+                    answer: "Blue Whale"
+                }
+            ],
+            quiz2: [
+                {
+                    question: "Which planet is known as the Red Planet?",
+                    options: ["Venus", "Mars", "Jupiter", "Mercury"],
+                    answer: "Mars"
+                },
+                {
+                    question: "What is the chemical symbol for water?",
+                    options: ["O", "W", "H2O", "HO"],
+                    answer: "H2O"
+                }
+            ]
+            // Add more quizzes here
+        };
+
+        let currentQuiz = null;
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            const selectedQuiz = document.getElementById("quiz-select").value;
+            currentQuiz = quizzes[selectedQuiz];
+            displayQuestion();
+            document.getElementById("quiz-selector").style.display = "none";
+            document.getElementById("quiz-container").style.display = "block";
+        }
+
+        function displayQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+            const question = currentQuiz[currentQuestion];
+            questionElement.textContent = question.question;
+            optionsElement.innerHTML = "";
+            question.options.forEach(option => {
+                const optionElement = document.createElement("div");
+                optionElement.classList.add("option");
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnswer(option);
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const question = currentQuiz[currentQuestion];
+            if (selectedOption === question.answer) {
+                score++;
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < currentQuiz.length) {
+                displayQuestion();
+            } else {
+                displayResult();
+            }
+        }
+
+        function displayResult() {
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").textContent = `Your Score: ${score}/${currentQuiz.length}`;
+        }
+    </script>
+</body>
+</html>
